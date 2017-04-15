@@ -1,0 +1,9 @@
+durable-rules==0.33.95
+fire==0.1.0
+requests==2.13.0
+aiohttp==2.0.7
+lxml==3.7.3
+joblib==0.11
+aiocache==0.3.3
+ujson==1.35
+mongoengine==0.12.0
