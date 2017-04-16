@@ -1,13 +1,19 @@
 # encoding: utf-8
 import re
 import aiohttp
+from collections import defaultdict
+
 import asyncio
 import async_timeout
-from collections import defaultdict
-import db
 from lxml import etree
 from aiocache import cached, RedisCache
 from aiocache.serializers import PickleSerializer
+from pymongo.errors import DuplicateKeyError
+from mongoengine.errors import NotUniqueError
+
+import db
+from tools.parsing import body_as_etree
+
 
 cache = RedisCache(endpoint="127.0.0.1", port=6379, namespace="main")
 
@@ -20,13 +26,7 @@ class BmeLoader:
     ON_ERROR_SLEEP = 1
 
     def __init__(self):
-        self.parser = etree.XMLParser(recover=True)
         self.fetch_sem = asyncio.Semaphore(1)
-
-    def get_body(self, html):
-        body = html[html.find('<body'):html.find('</body')]
-        root = etree.fromstring(body, self.parser)
-        return root
 
     def cast_url(self, url):
         if url.startswith('/'):
@@ -40,7 +40,8 @@ class BmeLoader:
             data = await cache.get(url, timeout=0)
             if data:
                 return data
-        except TimeoutError as e:
+        #except: TimeoutError as e:
+        except Exception as e:
             print(e)  # TODO
 
         while True:
@@ -52,7 +53,8 @@ class BmeLoader:
                         if response.status == 200:
                             try:
                                 await cache.set(url, html, timeout=0)
-                            except TimeoutError as e:
+                            except Exception as e:
+                            # except TimeoutError as e:
                                 print(e)  # TODO
 
                             return html
@@ -60,12 +62,14 @@ class BmeLoader:
 
     async def fetch_article(self, session, url, title):
         html = await self.fetch(session, url)
-        article = db.Article(url=url, title=title, raw=html)
-        article.save()
-        # print(title)
+        try:
+            article = db.Article(url=self.cast_url(url), title=title, raw=html)
+            article.save()
+        except NotUniqueError:
+            pass
 
     async def fetch_tome(self, session, url):
-        root = self.get_body(await self.fetch(session, url))
+        root = body_as_etree(await self.fetch(session, url))
         await asyncio.wait([
             self.fetch_article(session, a.get('href'), a.get('title'))
             for a in root.xpath('//div[@class="mw-content-ltr"]//a')
@@ -76,7 +80,7 @@ class BmeLoader:
 
     async def run(self, loop):
         async with aiohttp.ClientSession(loop=loop) as session:
-            body = self.get_body(await self.fetch(session, START_URL))
+            body = body_as_etree(await self.fetch(session, START_URL))
             await asyncio.wait([
                 self.fetch_tome(session, a.get('href'))
                 for a in body.xpath('//a')

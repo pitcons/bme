@@ -7,3 +7,5 @@ joblib==0.11
 aiocache==0.3.3
 ujson==1.35
 mongoengine==0.12.0
+Owlready==0.3
+traitlets==4.3.2
