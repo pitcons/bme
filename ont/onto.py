@@ -26,3 +26,9 @@ class Tome(Thing):
 
 class source(AnnotationProperty):
     ontology = onto
+
+class first_sentence(AnnotationProperty):
+    ontology = onto
+
+class raw(AnnotationProperty):
+    ontology = onto

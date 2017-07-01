@@ -1,0 +1,45 @@
+import "base.proto";
+import "facttypes_base.proto";
+
+message Article: NFactType.TFact
+{
+    // required string Name = 1;
+    optional string Name = 1;
+    optional string FirstWord = 2;
+}
+
+message Test: NFactType.TFact
+{
+  optional string A = 1;
+  optional string B = 2;
+  optional string C = 3;
+  optional string D = 4;
+  optional string E = 5;
+}
+
+// Род, Семейство
+message FamilyGenus: NFactType.TFact
+{
+    required string Family = 1;
+    required string Genus = 2;
+}
+
+// см. 
+message LinkToArticle: NFactType.TFact
+{
+    required string Name = 1;
+}
+
+
+// Местоположение чего-либо
+message Location: NFactType.TFact
+{
+    optional string Name = 1;  
+}
+
+// Курорт
+message Resort: NFactType.TFact
+{
+    optional string Name = 1;
+   
+}

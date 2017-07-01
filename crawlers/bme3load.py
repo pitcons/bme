@@ -1,5 +1,6 @@
 # encoding: utf-8
 import re
+import time
 import aiohttp
 from collections import defaultdict
 
@@ -48,6 +49,7 @@ class BmeLoader:
             async with self.fetch_sem:
                 with async_timeout.timeout(self.FETCH_TIMEOUT):
                     print('real fetch: ' + url)
+                    time.sleep(1)
                     async with session.get(url) as response:
                         html = await response.text()
                         if response.status == 200:
@@ -78,9 +80,28 @@ class BmeLoader:
         if next_pages:
             await self.fetch_tome(session, next_pages[0].get('href'))
 
+    async def fetch_by_first_letter(self, session, url):
+        root = body_as_etree(await self.fetch(session, url))
+        await asyncio.wait([
+            self.fetch_article(session, a.get('href'), a.get('title'))
+            for a in root.xpath('//table[@class="mw-prefixindex-list-table"]//a')
+        ])
+        next_pages = root.xpath('//div[@class="mw-prefixindex-nav"]/a')
+
+        if next_pages:
+            await self.fetch_by_first_letter(session, next_pages[0].get('href'))
+
     async def run(self, loop):
         async with aiohttp.ClientSession(loop=loop) as session:
             body = body_as_etree(await self.fetch(session, START_URL))
+
+            await asyncio.wait([
+                self.fetch_by_first_letter(session, a.get('href'))
+                for a in body.xpath('//a')
+                if a.get('title', '').startswith(
+                        'Служебная:Указатель по началу названия')
+            ])
+
             await asyncio.wait([
                 self.fetch_tome(session, a.get('href'))
                 for a in body.xpath('//a')

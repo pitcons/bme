@@ -3,9 +3,72 @@ encoding "utf8";               // указываем кодировку, в ко
 import "base.proto";           // подключаем описания protobuf-типов (TAuxDicArticle и прочих)
 import "articles_base.proto";  // Файлы base.proto и articles_base.proto встроены в компилятор.
                                // Их необходимо включать в начало любого gzt-словаря.
+import "fact_types.proto";
 
-// статья с нашей грамматикой:
+
+TAuxDicArticle "день_недели"
+{
+     key = "понедельник" | "вторник" | "среда" | "четверг" | "пятница" | "суббота" | "воскресенье"
+}
+
+TAuxDicArticle "язык"
+{
+     key = "лат" | "греч"
+}
+
+
+// Статьи
+
 TAuxDicArticle "наша_первая_грамматика"
 {
     key = { "tomita:first.cxx" type=CUSTOM }
 }
+
+TAuxDicArticle "link_to_article"
+{
+    key = { "tomita:link_to_article.cxx" type=CUSTOM }
+}
+
+TAuxDicArticle "location"
+{
+    key = { "tomita:location.cxx" type=CUSTOM }
+}
+
+// TAuxDicArticle "resort"
+// {
+//     key = { "tomita:resort.cxx" type=CUSTOM }
+// }
+
+TAuxDicArticle "play_grammar"
+{
+    key = { "tomita:play.cxx" type=CUSTOM }
+}
+
+
+// Аббревиатуры
+
+TAbbreviation "семейство" {
+    key = { "семейство" type = CUSTOM }
+    text = "сем."
+    type = NewerEOS
+}
+
+TAbbreviation "река" {
+    key = { "река" type = CUSTOM }
+    text = "р."
+    type = NewerEOS
+}
+
+
+TAbbreviation "смотри" {
+    key = { "смотри" type = CUSTOM }
+    text = "см."
+    type = NewerEOS
+}
+
+
+//TAbbreviation "close_a" {
+//    key = { "close_a" type = CUSTOM }
+//    text = "!</a>"
+//    type = NewerEOS
+//}

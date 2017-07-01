@@ -61,9 +61,11 @@ class Bme3Import:
         content = root.xpath('//div[@id="mw-content-text"]')[0]
         text = etree.tostring(content).decode('utf-8')
         ANNOTATIONS[article].add_annotation(
-            "comment", html.unescape(remove_tags(text)))
-        ANNOTATIONS[article].add_annotation(
             "source", db_article.url)
+        ANNOTATIONS[article].add_annotation(
+            "first_sentence", db_article.first_sentence)
+        # ANNOTATIONS[article].add_annotation(
+        #     "comment", html.unescape(remove_tags(text)))
 
 
     def process_article(self, db_article):
@@ -76,6 +78,7 @@ class Bme3Import:
         self.extract_tome(db_article, article, root)
         # Выделяем содержание
         self.extract_content(db_article, article, root)
+
 
     def run(self):
         self.ensure_tomes()

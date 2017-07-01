@@ -2,15 +2,41 @@ encoding "utf8"; // указываем кодировку, в которой н�
 
 TTextMinerConfig {
   Dictionary = "mydic.gzt"; // путь к корневому словарю
-  
+
   PrettyOutput = "PrettyOutput.html"; // путь к файлу с отладочным выводом в удобном для чтения виде
 
   Input = {
-    File = "text.txt"; // путь к входному файлу
+    // Type = dpl;
+
+    // Если File пропущено — то STDIN
+    File = "/home/petr/ownCloud/projects/bme/tomita/parser/input.txt";
+    // Format = html;  
+    // File = "/home/petr/ownCloud/projects/bme/data/for_tomita.txt";
+    // File = "/home/petr/ownCloud/projects/bme/data/debug_tomita.txt";
   }
 
-  Articles = [
-    { Name = "наша_первая_грамматика" } // название статьи в корневом словаре,
-                                          // которая содержит запускаемую грамматику
+  Output = {
+    File = "output.txt";
+    // Format = text;
+    Format = xml;
+  }
+
+  Articles = [ 
+     // { Name = "наша_первая_грамматика" }
+     // { Name = "play_grammar" }
+     // { Name = "link_to_article" },
+     // { Name = "restort" }
+     // { Name = "restort" }
+     { Name = "location" }     
+  ]
+
+  Facts = [
+    { Name = "Test"; },
+    { Name = "Article"; },
+    { Name = "LinkToArticle"; },
+    { Name = "DebugFact"; },
+    { Name = "FamilyGenus"; },
+    { Name = "Resort"; },
+    { Name = "Location" }
   ]
 }
