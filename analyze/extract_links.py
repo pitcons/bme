@@ -86,7 +86,8 @@ def extract_links(debug_miss=True):
                     # так и не получилось найти
                     # print("NOT FOUND---BEGIN")
                     print(article.title)
-                    print("NOT FOUND", pos, text[pos-40:pos+40])
+                    print(article.url)
+                    print("NOT FOUND", pos, text[pos-120:pos+40])
                     # print("NOT FOUND---END")
 
         article.save()

@@ -64,6 +64,12 @@ class BmeLoader:
 
     async def fetch_article(self, session, url, title):
         html = await self.fetch(session, url)
+        title = title.upper()
+        title = title.replace (u'Ё', u'Е')
+        bracket = title.find('(')
+        if bracket > -1:
+            title = title[:bracket]
+        # все модификции title
         try:
             article = db.Article(url=self.cast_url(url), title=title, raw=html)
             article.save()
