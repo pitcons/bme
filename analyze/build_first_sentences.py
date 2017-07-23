@@ -17,7 +17,7 @@ def build_first_sentences():
     """
     path = os.path.join(config.data_path, 'first_sentences.html')
     with open(path, 'w') as f:
-        for article in db.Article.objects.all()[:100]:
+        for article in db.Article.objects.all(): # [:100]:
             body = body_as_etree(article.raw)
             content = body.xpath("//div[@id='mw-content-text']")[0]
             fist_p = etree.tostring(content.xpath('//p')[0])

@@ -6,9 +6,10 @@ from mongoengine import (Document, StringField, IntField, ListField,
 class Article(Document):
     url = StringField(unique=True)
     raw = StringField()
-    title = StringField(unique=True)
+    title = StringField()
     normalized_title = StringField()
     bme_version = StringField()
+    category = StringField()
     tome = IntField()
     first_sentence = StringField()
     # rutez_path = ListField(StringField)
@@ -19,5 +20,6 @@ class Article(Document):
     meta = {
         'indexes': [
             'tome',
+            {'fields': ('title', 'bme_version'), 'unique': True}
         ]
     }

@@ -71,7 +71,12 @@ class BmeLoader:
             title = title[:bracket]
         # все модификции title
         try:
-            article = db.Article(url=self.cast_url(url), title=title, raw=html)
+            article = db.Article(
+                bme_version='3',
+                url=self.cast_url(url),
+                title=title,
+                raw=html
+            )
             article.save()
         except NotUniqueError:
             pass

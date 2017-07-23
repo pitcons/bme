@@ -11,7 +11,7 @@ import db
 from config import config
 from crawlers.bme3load import bme3load
 
-from analyze.first_sentences import build_first_sentences
+from analyze.build_first_sentences import build_first_sentences
 from analyze.rutez_paths import rutez_paths
 from analyze.extract_persons import extract_persons
 from analyze.extract_links import extract_links
